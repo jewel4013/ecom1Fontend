@@ -1,7 +1,8 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
+import Profile from './views/Profile.vue';
+
 </script>
 
 <template>
-  <HelloWorld />
+  <Profile />
 </template>
