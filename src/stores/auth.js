@@ -16,7 +16,20 @@ export const userAuth = defineStore('auth', {
     },
 
     actions: {
-        
+        async sendOtp(email) {
+            this.sending = true
+            try {
+                const res = await http.post('login/otp', {
+                    email,
+                })
+                this.email = email
+                this.message = res.data.message
+                this.sending = false
+            } catch (error) {
+                this.message = error.response.data.message
+                this.sending = false                
+            }
+        },
 
     }
     
