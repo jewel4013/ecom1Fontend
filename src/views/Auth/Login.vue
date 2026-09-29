@@ -3,13 +3,16 @@
         <h2 style="margin-top: 0">Login form</h2>
         <div class="row">
             <div>
-                <label for="">Email</label>
-                <input type="text" v-model="email" />
+                <label for="email">Email</label>
+                <input id="email" type="email" v-model="email" placeholder="you@example.com" />
             </div>
-            <div style="display: flex; gap: 5rem;">
+            <div style="display: flex; gap: 1rem; align-items: center;">
                 <button @click="send" :disabled="auth.sending">
                     {{ auth.sending ? 'Sending...' : 'Send' }}
                 </button>
+                <span v-if="auth.sendMessage" :class="auth.sendError ? 'msg-error' : 'msg-success'">
+                    {{ auth.sendMessage }}
+                </span>
             </div>
         </div>
 
@@ -17,12 +20,17 @@
 
         <div class="row">
             <div>
-                <label for="">OTP</label>
-                <input type="text" maxlength="6-digit code" />
+                <label for="otp">OTP</label>
+                <input id="otp" v-model="otp" type="text" maxlength="6" placeholder="6-digit code" />
             </div>
-            <button>
-                Verify & Login
-            </button>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <button @click="verify" :disabled="auth.verifing">
+                    {{ auth.verifing ? 'Verifying...' : 'Verify & Login' }}
+                </button>
+                <span v-if="auth.verifyMessage" :class="auth.verifyError ? 'msg-error' : 'msg-success'">
+                    {{ auth.verifyMessage }}
+                </span>
+            </div>
         </div>
     </div>
 </template>
@@ -39,5 +47,16 @@
     const send = () => {
         auth.sendOtp(email.value)
     }
+    const verify = () => {
+        auth.verifyOtp(email.value, otp.value)
+    }
 </script>
 
+<style scoped>
+.msg-success {
+    color: green;
+}
+.msg-error {
+    color: red;
+}
+</style>

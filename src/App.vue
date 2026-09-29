@@ -14,6 +14,7 @@
 
 <style>
 button{
+  color: black;
   padding: .5rem .1rem;
   border: 1px solid #ddd;
   border-radius: 8px;
