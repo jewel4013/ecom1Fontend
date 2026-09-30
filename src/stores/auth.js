@@ -19,6 +19,8 @@ export const userAuth = defineStore('auth', {
         sendMessage: '',
         sendError: false,
 
+        otpSent: false,
+
         verifing: false,
         verifyMessage: '',
         verifyError: false,
@@ -39,6 +41,7 @@ export const userAuth = defineStore('auth', {
                 })
                 this.email = email
                 this.sendMessage = toText(res.data.message)
+                this.otpSent = true
             } catch (error) {
                 this.sendMessage = getErrorMessage(error)
                 this.sendError = true

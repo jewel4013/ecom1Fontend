@@ -1,11 +1,14 @@
 import { createRouter, createWebHistory } from "vue-router";
 import Profile from "../views/Profile.vue";
 import Login from "../views/Auth/Login.vue";
+import Home from "../views/home.vue";
+import Dashboard from "../views/dashboard/myDashboard.vue";
 
 const routes = [
   {
     path: "/",
-    redirect: { name: "Login" },
+    name: "Home",
+    component: Home,
   },
   {
     path: "/login",
@@ -19,6 +22,11 @@ const routes = [
     component: Profile,
     meta: { requiresAuth: true },
   },
+  {
+    path: "/dashboard/my-account",
+    name: "Dashboard",
+    component: Dashboard,
+  }
 ];
 
 const router = createRouter({
