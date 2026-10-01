@@ -52,8 +52,9 @@ export const userAuth = defineStore('auth', {
 
         async verifyOtp(email, otp) {
             this.verifing = true
-            this.verifyMessage = ''
+            this.sendMessage = ''
             this.verifyError = false
+            this.verifyMessage = ''            
             try {
                 const res = await http.post('login', {
                     email,
@@ -69,6 +70,8 @@ export const userAuth = defineStore('auth', {
                 this.email = email
                 this.access_token = token
                 localStorage.setItem('access_token', token)
+
+                await new Promise((resolve) => setTimeout(resolve, 2000)) // 2 second delay for better UX                                  
                 router.push({ name: 'Profile' })
             } catch (error) {
                 this.verifyMessage = getErrorMessage(error)
@@ -77,6 +80,15 @@ export const userAuth = defineStore('auth', {
                 this.verifing = false
             }
         },
+
+        logout() {
+            this.access_token = null
+            this.email = ''
+            this.otpSent = false
+
+            localStorage.removeItem('access_token')
+            
+        }
 
     }
 

@@ -34,8 +34,11 @@
                                 <li><a href="compare.html"><i class="ti-control-shuffle"></i><span>Compare</span></a>
                                 </li>
                                 <li><a href="wishlist.html"><i class="ti-heart"></i><span>Wishlist</span></a></li>
-                                <li>                                    
+                                <li v-if="!auth.isAuthenticated">
                                     <router-link to="/login" ><i class="ti-user"></i><span>Login</span></router-link>
+                                </li>
+                                <li v-if="auth.isAuthenticated">                                    
+                                    <router-link to="/login" @click="logout"><i class="ti-user"></i><span>Logout</span></router-link>
                                 </li>
                             </ul>
                         </div>
@@ -410,3 +413,13 @@
     </header>
     <!-- END HEADER -->
 </template>
+
+<script setup>
+    import { userAuth } from '../../stores/auth';
+    const auth = userAuth();
+
+    const logout = () => {
+        auth.logout();
+    };
+
+</script>

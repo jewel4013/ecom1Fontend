@@ -9,32 +9,32 @@
                             <div class="heading_s1">
                                 <h3>Login</h3>
                             </div>
-                            <form @submit.prevent>
+                            <form @submit.prevent="send">
                                 <div class="form-group mb-3">
-                                    <input v-model="email" type="email" class="form-control" name="email" placeholder="Your Email">
+                                    <input v-model="email" type="email" class="form-control" name="email" placeholder="Your Email" required>
                                 </div>
                                 <div class="form-group mb-3">
-                                    <button @click="send" :disabled="auth.sending" class="btn btn-fill-out btn-block">
+                                    <button :disabled="auth.sending" class="btn btn-fill-out btn-block" type="submit">
                                         {{ auth.sending ? 'Sending...' : 'Send OTP' }}
                                     </button>
                                     <span v-if="auth.sendMessage" :class="auth.sendError ? 'msg-error' : 'msg-success'">
                                         {{ auth.sendMessage }}
                                     </span>
                                 </div>
-                                <template v-if="auth.otpSent">
-                                    <p>-then-</p>
-                                    <div class="form-group mb-3">
-                                        <input v-model="otp" class="form-control" placeholder="6-digit OTP">
-                                    </div>                              
-                                    <div class="form-group mb-3">
-                                        <button  @click="verify" :disabled="auth.verifing" type="submit" class="btn btn-fill-out btn-block">
-                                            {{ auth.verifing ? 'Verifying...' : 'Verify & Login' }}
-                                        </button>
-                                        <span v-if="auth.verifyMessage" :class="auth.verifyError ? 'msg-error' : 'msg-success'">
-                                            {{ auth.verifyMessage }}
-                                        </span>
-                                    </div>
-                                </template>
+                            </form>
+                            <form @submit.prevent="verify" v-if="auth.otpSent">
+                                <p>Enter the OTP sent to your email address.</p>
+                                <div class="form-group mb-3">
+                                    <input v-model="otp" class="form-control" placeholder="6-digit OTP" maxlength="6">
+                                </div>                              
+                                <div class="form-group mb-3">
+                                    <button :disabled="auth.verifing" type="submit" class="btn btn-fill-out btn-block">
+                                        {{ auth.verifing ? 'Verifying...' : 'Verify & Login' }}
+                                    </button>
+                                    <span v-if="auth.verifyMessage" :class="auth.verifyError ? 'msg-error' : 'msg-success'">
+                                        {{ auth.verifyMessage }}
+                                    </span>
+                                </div>                                
                             </form>                                                       
                         </div>
                     </div>

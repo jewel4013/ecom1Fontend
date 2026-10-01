@@ -26,6 +26,7 @@ const routes = [
     path: "/dashboard/my-account",
     name: "Dashboard",
     component: Dashboard,
+    meta: { requiresAuth: true },
   }
 ];
 
