@@ -3,6 +3,7 @@ import Profile from "../views/Profile.vue";
 import Login from "../views/Auth/Login.vue";
 import Home from "../views/home.vue";
 import Dashboard from "../views/dashboard/myDashboard.vue";
+// import { userAuth } from "../stores/auth.js";
 
 const routes = [
   {
@@ -42,6 +43,15 @@ router.beforeEach((to) => {
   if (to.meta.guestOnly && loggedIn) return { name: "Profile" };
   if (to.meta.requiresAuth && !loggedIn) return { name: "Login" };
 });
+
+// router.beforeEach((to) => {
+//   const authStore = userAuth();
+
+//   if(to.meta.requiresAuth && !authStore.isAuthenticated) return { name: "Login" };
+//   if(to.meta.guestOnly && authStore.isAuthenticated) return { name: "Profile" };
+// })
+
+
 
 export default router;
 
