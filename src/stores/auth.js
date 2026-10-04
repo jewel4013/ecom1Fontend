@@ -1,14 +1,8 @@
 import { defineStore } from 'pinia'
 import http from '../lib/http'
 import router from '../router'
-
-// Laravel কখনো message পাঠায় array হিসেবে (["OTP sent successfully"]), কখনো string হিসেবে
-const toText = (message) =>
-    Array.isArray(message) ? message.join(', ') : message
-
-// সার্ভার বন্ধ/নেটওয়ার্ক এরর হলে error.response থাকে না, তাই ডিফল্ট মেসেজ
-const getErrorMessage = (error) =>
-    toText(error.response?.data?.message) || 'Something went wrong. Please try again.'
+import { toast } from 'vue3-toastify'
+import { toText, getErrorMessage } from '../lib/helpers'
 
 export const userAuth = defineStore('auth', {
     state: () => ({
@@ -71,8 +65,9 @@ export const userAuth = defineStore('auth', {
                 this.access_token = token
                 localStorage.setItem('access_token', token)
 
+                toast.success(res.data.message)
                 await new Promise((resolve) => setTimeout(resolve, 2000)) // 2 second delay for better UX                                  
-                router.push({ name: 'Profile' })
+                router.push({ name: 'Dashboard' })
             } catch (error) {
                 this.verifyMessage = getErrorMessage(error)
                 this.verifyError = true
@@ -87,6 +82,7 @@ export const userAuth = defineStore('auth', {
             this.otpSent = false
 
             localStorage.removeItem('access_token')
+            toast.success("Logged out successfully")
             
         }
 

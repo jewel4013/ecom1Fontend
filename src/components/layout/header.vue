@@ -33,7 +33,9 @@
                             <ul class="header_list">
                                 <li><a href="compare.html"><i class="ti-control-shuffle"></i><span>Compare</span></a>
                                 </li>
-                                <li><a href="wishlist.html"><i class="ti-heart"></i><span>Wishlist</span></a></li>
+                                <li>
+                                    <router-link to="/dashboard/my-account/wishlist"><i class="ti-heart"></i><span>Wishlist</span></router-link>
+                                </li>
                                 <li v-if="!auth.isAuthenticated">
                                     <router-link to="/login" ><i class="ti-user"></i><span>Login</span></router-link>
                                 </li>

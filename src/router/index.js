@@ -3,6 +3,8 @@ import Profile from "../views/Profile.vue";
 import Login from "../views/Auth/Login.vue";
 import Home from "../views/home.vue";
 import Dashboard from "../views/dashboard/myDashboard.vue";
+import { toast } from "vue3-toastify";
+import Wishlist from "../views/Auth/wishlist.vue";
 // import { userAuth } from "../stores/auth.js";
 
 const routes = [
@@ -28,6 +30,12 @@ const routes = [
     name: "Dashboard",
     component: Dashboard,
     meta: { requiresAuth: true },
+  },
+  {
+    path: "/dashboard/my-account/wishlist",
+    name: "Wishlist",
+    component: Wishlist,
+    meta: { requiresAuth: true },
   }
 ];
 
@@ -40,8 +48,15 @@ const router = createRouter({
 router.beforeEach((to) => {
   const loggedIn = !!localStorage.getItem("access_token");
 
-  if (to.meta.guestOnly && loggedIn) return { name: "Profile" };
-  if (to.meta.requiresAuth && !loggedIn) return { name: "Login" };
+  if (to.meta.guestOnly && loggedIn) {
+    toast.warning('You are already logged in!')
+    return { name: "Profile" };
+  }
+  if (to.meta.requiresAuth && !loggedIn){
+    toast.warning('Please login first!')
+    return { name: "Login" };
+  } 
+    
 });
 
 // router.beforeEach((to) => {
