@@ -3,6 +3,7 @@ import http from '../lib/http'
 import router from '../router'
 import { toast } from 'vue3-toastify'
 import { toText, getErrorMessage } from '../lib/helpers'
+import { useCart } from './cart'
 
 export const userAuth = defineStore('auth', {
     state: () => ({
@@ -64,10 +65,12 @@ export const userAuth = defineStore('auth', {
                 this.email = email
                 this.access_token = token
                 localStorage.setItem('access_token', token)
+                await useCart().fetchCarts()
 
                 toast.success(res.data.message)
                 await new Promise((resolve) => setTimeout(resolve, 2000)) // 2 second delay for better UX                                  
                 router.push({ name: 'Dashboard' })
+
             } catch (error) {
                 this.verifyMessage = getErrorMessage(error)
                 this.verifyError = true
@@ -82,6 +85,7 @@ export const userAuth = defineStore('auth', {
             this.otpSent = false
 
             localStorage.removeItem('access_token')
+            useCart().$reset()
             toast.success("Logged out successfully")
             
         }

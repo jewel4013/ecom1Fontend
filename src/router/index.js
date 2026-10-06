@@ -5,6 +5,7 @@ import Home from "../views/home.vue";
 import Dashboard from "../views/dashboard/myDashboard.vue";
 import { toast } from "vue3-toastify";
 import Wishlist from "../views/Auth/wishlist.vue";
+import Carts from "../views/Auth/carts.vue";
 // import { userAuth } from "../stores/auth.js";
 
 const routes = [
@@ -36,7 +37,13 @@ const routes = [
     name: "Wishlist",
     component: Wishlist,
     meta: { requiresAuth: true },
-  }
+  },
+  {
+    path: "/dashboard/my-account/carts",
+    name: "Carts",
+    component: Carts,
+    meta: { requiresAuth: true },
+  },
 ];
 
 const router = createRouter({

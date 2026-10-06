@@ -379,12 +379,12 @@
                             </div>
                             <div class="search_overlay"></div>
                         </li>
-                        <li class="dropdown cart_dropdown"><a class="nav-link cart_trigger" href="#"
+                        <li v-if="auth.isAuthenticated" class="dropdown cart_dropdown"><a class="nav-link cart_trigger" href="#"
                                 data-bs-toggle="dropdown"><i class="linearicons-cart"></i><span
-                                    class="cart_count">{{ carts.length }}</span></a>
+                                    class="cart_count">{{ cartStore.carts.length }}</span></a>
                             <div class="cart_box dropdown-menu dropdown-menu-right">
                                 <ul class="cart_list">
-                                    <li v-for="cart in carts" :key="cart.id">
+                                    <li v-for="cart in cartStore.carts" :key="cart.id">
                                         <a href="#" class="item_remove"><i class="ion-close"></i></a>
                                         <a href="#"><img src="/assets/images/cart_thamb1.jpg" alt="cart_thumb1">
                                             {{ cart.product.title }}
@@ -396,10 +396,11 @@
                                 </ul>
                                 <div class="cart_footer">
                                     <p class="cart_total"><strong>Subtotal:</strong> <span class="cart_price"> <span
-                                                class="price_symbole">$</span></span>159.00</p>
-                                    <p class="cart_buttons"><a href="#"
-                                            class="btn btn-fill-line rounded-0 view-cart">View Cart</a><a href="#"
-                                            class="btn btn-fill-out rounded-0 checkout">Checkout</a></p>
+                                                class="price_symbole">৳</span></span>{{ cartStore.subtotal.toFixed(2) }}</p>
+                                    <p class="cart_buttons">
+                                        <router-link to="/dashboard/my-account/carts" class="btn btn-fill-line rounded-0 view-cart">View Cart</router-link>
+                                        <a href="#" class="btn btn-fill-out rounded-0 checkout">Checkout</a>
+                                    </p>
                                 </div>
                             </div>
                         </li>
@@ -412,16 +413,14 @@
 </template>
 
 <script setup>
-    import { ref, onMounted } from 'vue'
+    import { onMounted } from 'vue'
     import { userAuth } from '../../stores/auth';
-    import http from '../../lib/http';
+    import { useCart } from '../../stores/cart';
     const auth = userAuth();
+    const cartStore = useCart();
 
-    const carts = ref([]);
-
-    onMounted(async () => {
-        const res = await http.get('/cart')
-        carts.value = res.data.data
+    onMounted(() => {
+        cartStore.fetchCarts()
     })
     
 

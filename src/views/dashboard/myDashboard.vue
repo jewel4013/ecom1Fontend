@@ -105,7 +105,7 @@
                                                         <div class="product_action_box">
                                                             <ul class="list_none pr_action_btn">
                                                                 <li class="add-to-cart">
-                                                                    <a href="#">
+                                                                    <a href="javascript:void(0)" @click.prevent="addToCart(wish.product_id)">
                                                                         <i class="icon-basket-loaded"></i>
                                                                     </a>
                                                                 </li>                                                                
@@ -258,6 +258,8 @@ import router from '../../router'
 import http from '../../lib/http'
 import { toast } from 'vue3-toastify'
 import { toText, getErrorMessage } from '../../lib/helpers'
+import { useCart } from '../../stores/cart' 
+
 
 const auth = userAuth()
 
@@ -283,6 +285,20 @@ onMounted(async () => {
         toast.error(getErrorMessage(error))
     }
 })
+
+const addToCart = async (id) => {
+    try {
+        const res = await http.post('/cart', { 
+            product_id: id, 
+            quantity: 1 
+        })
+        toast.success(toText(res.data.message))
+        await useCart().fetchCarts()
+    } catch (error) {
+        toast.error(getErrorMessage(error))
+    }
+}
+
 
 const removeFromWishlist = async (productId) => {
     try {

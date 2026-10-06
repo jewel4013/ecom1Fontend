@@ -654,12 +654,14 @@
 import { ref, onMounted } from 'vue'
 import http from '../lib/http';
 import { userAuth } from '../stores/auth';
+import { useCart } from '../stores/cart';
 import { toast } from 'vue3-toastify';
 import router from '../router';
 import { toText, getErrorMessage } from '../lib/helpers';
 
 const products = ref([])
 const auth = userAuth()
+const cartStore = useCart()
 
 onMounted( async () => {
     const res = await http.get('/products')
@@ -681,6 +683,7 @@ const addToCart = async (id) => {
             quantity:1
         })
         toast.success(toText(res.data.message))
+        await cartStore.fetchCarts()
     } catch (error) {
         toast.error(getErrorMessage(error))
     }
