@@ -150,14 +150,19 @@
                                                 </a>
                                                 <div class="product_action_box">
                                                     <ul class="list_none pr_action_btn">
-                                                        <li class="add-to-cart"><a href="#"><i
-                                                                    class="icon-basket-loaded"></i> Add To Cart</a></li>
+                                                        <li class="add-to-cart">
+                                                            <a href="javascript:void(0)" @click.prevent="addToCart(product.id)">
+                                                                <i class="icon-basket-loaded"></i> Add To Cart
+                                                            </a>
+                                                        </li>
                                                         <li><a href="shop-compare.html" class="popup-ajax"><i
                                                                     class="icon-shuffle"></i></a></li>
                                                         <li><a href="shop-quick-view.html" class="popup-ajax"><i
                                                                     class="icon-magnifier-add"></i></a></li>
                                                         <li >
-                                                            <a href="javascript:void(0)" @click.prevent="addToWishlist(product.id)" class="popup-ajax"><i class="icon-heart"></i></a>
+                                                            <a href="javascript:void(0)" @click.prevent="addToWishlist(product.id)" class="popup-ajax">
+                                                                <i class="icon-heart"></i>
+                                                            </a>
                                                         </li>
                                                     </ul>
                                                 </div>
@@ -660,6 +665,27 @@ onMounted( async () => {
     const res = await http.get('/products')
     products.value = res.data.data
 })
+
+
+const addToCart = async (id) => {
+
+    if(!auth.isAuthenticated){
+        toast.warning('Please login first!')
+        await new Promise((resolve) => setTimeout(resolve, 1500)) // 1.5 second delay for better UX
+        router.push('/login')
+        return
+    }
+    try {
+        const res = await http.post('/cart', { 
+            product_id:id,
+            quantity:1
+        })
+        toast.success(toText(res.data.message))
+    } catch (error) {
+        toast.error(getErrorMessage(error))
+    }
+
+}
 
 const addToWishlist = async (id) => {
 
