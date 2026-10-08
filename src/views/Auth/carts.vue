@@ -8,8 +8,9 @@
             <table class="table">
               <thead>
                 <tr>
-                  <th class="product-thumbnail">&nbsp;</th>
+                  <th class="product-thumbnail">Banner</th>
                   <th class="product-name">Product</th>
+                  <th class="product-stock-status">Stock Status</th>
                   <th class="product-price">Price</th>
                   <th class="product-quantity">Quantity</th>
                   <th class="product-subtotal">Total</th>
@@ -17,6 +18,9 @@
                 </tr>
               </thead>
               <tbody>
+                <tr v-if="cartStore.carts.length === 0">
+                  <td colspan="6" class="text-center" style="color: #999; padding:50px;">No cart items found.</td>
+                </tr>
                 <tr v-for="cart in cartStore.carts" :key="cart.id">
                   <td class="product-thumbnail">
                     <a href="#"
@@ -26,6 +30,7 @@
                   <td class="product-name" data-title="Product">
                     <a href="#">{{ cart.product.title }}</a>
                   </td>
+                  <td class="product-stock-status" data-title="Stock Status"><span class="badge rounded-pill text-bg-success">In Stock</span></td>
                   <td class="product-price" data-title="Price">৳{{ cart.product.price }}</td>
                   <td class="product-quantity" data-title="Quantity">
                     <div class="quantity">
@@ -42,7 +47,7 @@
                   </td>
                   <td class="product-subtotal" data-title="Total">৳{{ (cart.product.price * cart.quantity).toFixed(2) }}</td>
                   <td class="product-remove" data-title="Remove">
-                    <a href="#"><i class="ti-close"></i></a>
+                    <a href="javascript:void(0)" @click.prevent="cartStore.removeCart(cart.id)"><i class="ti-close"></i></a>
                   </td>
                 </tr>
 
@@ -71,9 +76,7 @@
                         </div>
                       </div>
                       <div class="col-lg-8 col-md-6 text-start text-md-end">
-                        <button class="btn btn-line-fill btn-sm" type="submit">
-                          Update Cart
-                        </button>
+                        <router-link to="/" class="btn btn-line-fill btn-sm">Add to Cart</router-link>
                       </div>
                     </div>
                   </td>
@@ -92,8 +95,8 @@
           <div class="medium_divider"></div>
         </div>
       </div>
-      <div class="row">
-        <div class="col-md-6">
+      <div class="row justify-content-center">
+        <!-- <div class="col-md-6">
           <div class="heading_s1 mb-3">
             <h6>Calculate Shipping</h6>
           </div>
@@ -143,7 +146,7 @@
               </div>
             </div>
           </form>
-        </div>
+        </div> -->
         <div class="col-md-6">
           <div class="border p-3 p-md-4">
             <div class="heading_s1 mb-3">
@@ -177,33 +180,30 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
 import { useCart } from '../../stores/cart';
+import { ref, computed, onMounted, watch } from 'vue'
 import axios from 'axios';
 
-const districts = ref([])
 
-onMounted(async () => {
-    const res = await axios.get('https://cdn.jsdelivr.net/npm/thikana@1.0.0/src/data/data.json')
-    districts.value = res.data.divisions
-        .flatMap((division) => division.districts)
-        .sort((a, b) => a.name.localeCompare(b.name))
-})
 
-const selectDistrict = ref('')
-const selectThana = ref('')
-
-const thanas = computed(() => {
-    const district = districts.value.find((d) => d.name === selectDistrict.value)
-    return district ? district.thana : []
-})
-
-watch(selectDistrict, () => {
-    selectThana.value = ''
-})
-
-// ডেটায় নামগুলো বড় হাতের (DHAKA), দেখানোর জন্য Dhaka বানাচ্ছি
-const toTitle = (name) => name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
+// const districts = ref([])
+// onMounted(async () => {
+//     const res = await axios.get('https://cdn.jsdelivr.net/npm/thikana@1.0.0/src/data/data.json')
+//     districts.value = res.data.divisions
+//         .flatMap((division) => division.districts)
+//         .sort((a, b) => a.name.localeCompare(b.name))
+// })
+// const selectDistrict = ref('')
+// const selectThana = ref('')
+// const thanas = computed(() => {
+//     const district = districts.value.find((d) => d.name === selectDistrict.value)
+//     return district ? district.thana : []
+// })
+// watch(selectDistrict, () => {
+//     selectThana.value = ''
+// })
+// // ডেটায় নামগুলো বড় হাতের (DHAKA), দেখানোর জন্য Dhaka বানাচ্ছি
+// const toTitle = (name) => name.toLowerCase().replace(/\b\w/g, (c) => c.toUpperCase())
 
 
 const cartStore = useCart();

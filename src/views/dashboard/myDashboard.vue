@@ -252,16 +252,18 @@
 </template>
 
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { userAuth } from '../../stores/auth'
 import router from '../../router'
 import http from '../../lib/http'
 import { toast } from 'vue3-toastify'
 import { toText, getErrorMessage } from '../../lib/helpers'
 import { useCart } from '../../stores/cart' 
+import { useRoute } from 'vue-router'
 
 
 const auth = userAuth()
+const route = useRoute()
 
 // বাম পাশের মেনু। id টা ডান পাশের tab-pane এর id এর সাথে মিলতে হবে
 const tabs = [
@@ -273,7 +275,15 @@ const tabs = [
 ]
 
 // এখন কোন ট্যাব খোলা আছে
-const activeTab = ref('dashboard')
+const activeTab = ref( route.hash.slice(1) || 'dashboard')
+router.replace({ path: route.path, hash: '' })
+
+// এই পেজে থাকা অবস্থায় hash বদলালে (যেমন header-এর Wishlist লিংক) সেই ট্যাব খুলে hash মুছে দিই
+watch(() => route.hash, (hash) => {
+    if (!hash) return
+    activeTab.value = hash.slice(1)
+    router.replace({ path: route.path, hash: '' })
+})
 
 const wishProducts = ref([])
 

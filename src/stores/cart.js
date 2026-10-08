@@ -16,5 +16,11 @@ export const useCart = defineStore('cart', {
             const res = await http.get('/cart')
             this.carts = res.data.data
         },
+        async removeCart(cartId) {
+            await http.delete('/cart', {
+                data: { cart_id: cartId },
+            })
+            this.carts = this.carts.filter((cart) => cart.id !== cartId)
+        }
     },
 })
