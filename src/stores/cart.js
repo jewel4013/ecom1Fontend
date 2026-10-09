@@ -8,7 +8,7 @@ export const useCart = defineStore('cart', {
 
     getters: {
         subtotal: (state) =>
-            state.carts.reduce((sum, cart) => sum + cart.quantity * Number(cart.product.price), 0),
+            state.carts.reduce((sum, i) => sum + i.quantity * Number(i.product.price), 0),
     },
 
     actions: {
@@ -20,7 +20,7 @@ export const useCart = defineStore('cart', {
             await http.delete('/cart', {
                 data: { cart_id: cartId },
             })
-            this.carts = this.carts.filter((cart) => cart.id !== cartId)
+            this.carts = this.carts.filter((i) => i.id !== cartId)
         }
     },
 })

@@ -385,7 +385,7 @@
                             <div class="cart_box dropdown-menu dropdown-menu-right">
                                 <ul class="cart_list">
                                     <li v-for="cart in cartStore.carts" :key="cart.id">
-                                        <a href="#" class="item_remove"><i class="ion-close"></i></a>
+                                        <a href="javascript:void(0)" @click.prevent="cartStore.removeCart(cart.id)" class="item_remove"><i class="ion-close"></i></a>
                                         <a href="#"><img src="/assets/images/cart_thamb1.jpg" alt="cart_thumb1">
                                             {{ cart.product.title }}
                                         </a>
