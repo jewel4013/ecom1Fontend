@@ -31,21 +31,22 @@
                     <a href="#">{{ cart.product.title }}</a>
                   </td>
                   <td class="product-stock-status" data-title="Stock Status"><span class="badge rounded-pill text-bg-success">In Stock</span></td>
-                  <td class="product-price" data-title="Price">৳{{ cart.product.price }}</td>
+                  <td class="product-price" data-title="Price">৳{{ cart.price }}</td>
                   <td class="product-quantity" data-title="Quantity">
                     <div class="quantity">
-                      <input type="button" value="-" class="minus" />
+                      <input type="button" value="-" class="minus" @click="decrement(cart)"/>
                       <input
                         name="quantity"
-                        value="2"
+                        :value="cart.quantity"
                         title="Qty"
                         class="qty"
                         size="4"
+                        readonly
                       />
-                      <input type="button" value="+" class="plus" />
+                      <input type="button" value="+" class="plus" @click="increment(cart)"/>
                     </div>
                   </td>
-                  <td class="product-subtotal" data-title="Total">৳{{ (cart.product.price * cart.quantity).toFixed(2) }}</td>
+                  <td class="product-subtotal" data-title="Total">৳{{ (cart.price * cart.quantity).toFixed(2) }}</td>
                   <td class="product-remove" data-title="Remove">
                     <a href="javascript:void(0)" @click.prevent="cartStore.removeCart(cart.id)"><i class="ti-close"></i></a>
                   </td>
@@ -76,7 +77,7 @@
                         </div>
                       </div>
                       <div class="col-lg-8 col-md-6 text-start text-md-end">
-                        <router-link to="/" class="btn btn-line-fill btn-sm">Add to Cart</router-link>
+                        <button type="button" v-if="cartStore.carts.length" @click="clearCarts()" class="btn btn-line-fill btn-sm">Clear Cart</button>
                       </div>
                     </div>
                   </td>
@@ -181,8 +182,11 @@
 
 <script setup>
 import { useCart } from '../../stores/cart';
-import { ref, computed, onMounted, watch } from 'vue'
-import axios from 'axios';
+import http from '../../lib/http';
+import {toText, getErrorMessage} from '../../lib/helpers';
+import { toast } from 'vue3-toastify';
+// import { ref, computed, onMounted, watch } from 'vue'
+// import axios from 'axios';
 
 
 
@@ -207,5 +211,30 @@ import axios from 'axios';
 
 
 const cartStore = useCart();
+
+const clearCarts = async () => {  
+  if(!confirm('Are you sure you want to clear your cart?')) {
+    return;
+  }
+  try {
+    const res = await http.get('/cart-clear');
+    await cartStore.fetchCarts();
+    toast.success(toText(res.data.message));
+  } catch (error) {
+    toast.error(getErrorMessage(error));
+  }
+};
+
+const decrement = (cart) => {
+  const check = Number(cart.quantity || 0) - 1;
+  if (check < 1) return;
+  cartStore.updateQuantity(cart, check);
+}
+
+const increment = (cart) => {
+  cartStore.updateQuantity(cart, Number(cart.quantity || 0) + 1);
+}
+
+
 
 </script>

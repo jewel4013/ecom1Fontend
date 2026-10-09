@@ -390,7 +390,7 @@
                                             {{ cart.product.title }}
                                         </a>
                                         <span class="cart_quantity"> {{ cart.quantity }} x <span class="cart_amount"> <span
-                                                    class="price_symbole">৳</span></span>{{ cart.product.price }}</span>
+                                                    class="price_symbole">৳</span></span>{{ cart.price }}</span>
                                     </li>
                                     
                                 </ul>
