@@ -2,9 +2,9 @@
 
 <template>
   <BaseLayout>
-    <router-view></router-view>
-        
+    <router-view></router-view>        
   </BaseLayout>
+  
 </template>
 
 <script setup>

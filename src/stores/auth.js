@@ -57,6 +57,11 @@ export const userAuth = defineStore('auth', {
                 })
                 // token থাকে res.data.data.access_token এ। token না থাকলে লগইন ব্যর্থ ধরব
                 const token = res.data.data?.access_token
+                const user = res.data.data?.user
+
+                console.log(user)
+
+
                 if (!token) {
                     this.verifyMessage = toText(res.data.message) || 'Invalid OTP'
                     this.verifyError = true
