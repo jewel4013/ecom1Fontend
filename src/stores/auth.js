@@ -9,6 +9,8 @@ export const userAuth = defineStore('auth', {
     state: () => ({
         email: '',
         access_token: localStorage.getItem('access_token'),
+        // লগইনের পর user (name, email, roles) রাখি, যাতে বোঝা যায় কে Admin
+        user: JSON.parse(localStorage.getItem('user') || 'null'),
 
         sending: false,
         sendMessage: '',
@@ -23,15 +25,18 @@ export const userAuth = defineStore('auth', {
 
     getters: {
         isAuthenticated: (check) => !!check.access_token,
+        isAdmin: (check) => !!check.user?.roles?.includes('Admin'),
     },
 
     actions: {
-        async sendOtp(email) {
+        // isAdmin = true হলে admin-এর route-এ request যাবে
+        async sendOtp(email, isAdmin = false) {
             this.sending = true
             this.sendMessage = ''
             this.sendError = false
             try {
-                const res = await http.post('login/otp', {
+                const url = isAdmin ? 'admin/login/otp' : 'login/otp'
+                const res = await http.post(url, {
                     email,
                 })
                 this.email = email
@@ -45,13 +50,14 @@ export const userAuth = defineStore('auth', {
             }
         },
 
-        async verifyOtp(email, otp) {
+        async verifyOtp(email, otp, isAdmin = false) {
             this.verifing = true
             this.sendMessage = ''
             this.verifyError = false
-            this.verifyMessage = ''            
+            this.verifyMessage = ''
             try {
-                const res = await http.post('login', {
+                const url = isAdmin ? 'admin/login' : 'login'
+                const res = await http.post(url, {
                     email,
                     otp,
                 })
@@ -70,11 +76,13 @@ export const userAuth = defineStore('auth', {
                 this.email = email
                 this.access_token = token
                 localStorage.setItem('access_token', token)
+                this.user = user
+                localStorage.setItem('user', JSON.stringify(user))
                 await useCart().fetchCarts()
 
                 toast.success(res.data.message)
                 await new Promise((resolve) => setTimeout(resolve, 2000)) // 2 second delay for better UX                                  
-                router.push({ name: 'Dashboard' })
+                router.push({ name: isAdmin ? 'AdminDashboard' : 'Dashboard' })
 
             } catch (error) {
                 this.verifyMessage = getErrorMessage(error)
@@ -90,6 +98,8 @@ export const userAuth = defineStore('auth', {
             this.otpSent = false
 
             localStorage.removeItem('access_token')
+            this.user = null
+            localStorage.removeItem('user')
             useCart().$reset()
             toast.success("Logged out successfully")
             
