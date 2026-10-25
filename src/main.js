@@ -5,9 +5,13 @@ import router from './router'
 import App from './App.vue'
 import Vue3Toastify from 'vue3-toastify'
 import 'vue3-toastify/dist/index.css'
+import './lib/echo'
 
 
-createApp(App).use(createPinia()).use(router).use(Vue3Toastify, {
+createApp(App)
+.use(createPinia())
+.use(router)
+.use(Vue3Toastify, {
     position: "top-right",
     autoClose: 1500,
 }).mount('#app')
